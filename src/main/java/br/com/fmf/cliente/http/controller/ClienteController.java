@@ -12,11 +12,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cliente")
+@CrossOrigin(origins = "http://127.0.0.1:5500")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    private ModelMapper modelMapper;
+    private ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -53,6 +54,7 @@ public class ClienteController {
         clienteService.buscarPorID(id)
                 .map(clienteBase -> {
                     modelMapper.map(cliente, clienteBase);
+                    clienteService.salvar(clienteBase);
                     return Void.TYPE;
                 }).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
     }
